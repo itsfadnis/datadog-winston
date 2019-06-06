@@ -1,0 +1,27 @@
+{
+  "name": "datadog-winston",
+  "version": "1.0.0",
+  "description": "Ship winston logs to datadog without breaking a sweat",
+  "main": "index.js",
+  "repository": "https://github.com/itsfadnis/datadog-winston.git",
+  "author": "itsfadnis <nik.fadnis@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.4.5",
+    "node-fetch": "^2.6.0",
+    "winston-transport": "^4.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "jest": "^24.8.0",
+    "nock": "^10.0.6",
+    "standard": "^12.0.1"
+  },
+  "scripts": {
+    "test": "standard && jest",
+    "build": "babel lib --out-dir ."
+  }
+}
