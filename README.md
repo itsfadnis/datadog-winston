@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/itsfadnis/datadog-winston/branches/master/badge.svg)](https://semaphoreci.com/itsfadnis/datadog-winston)
+
 # datadog-winston
 Ship winston logs to datadog without breaking a sweat
 
