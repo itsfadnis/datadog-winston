@@ -3,6 +3,15 @@
 # datadog-winston
 Ship winston logs to datadog without breaking a sweat
 
+## Install
+```console
+$ npm install --save datadog-winston
+```
+or
+```console
+$ yarn add datadog-winston
+```
+
 ## Options
 - **apiKey**: Your datadog api key *[required]*
 - **hostname**: The machine/server hostname
