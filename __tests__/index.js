@@ -28,7 +28,7 @@ describe('DatadogTransport#log(info, callback)', () => {
     })
 
     scope.post(
-      '/v1/inputapikey',
+      '/v1/input/apikey',
       JSON.stringify({
         foo: 'bar'
       })
