@@ -22,6 +22,7 @@
   },
   "scripts": {
     "test": "standard && jest",
-    "build": "babel lib --out-dir ."
+    "build": "babel lib --out-dir .",
+    "prepublish": "yarn build"
   }
 }
