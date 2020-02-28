@@ -35,7 +35,7 @@ describe('DatadogTransport#log(info, callback)', () => {
     ).query({
       service: 'service',
       ddsource: 'ddsource',
-      ddtags: 'ddtags',
+      ddtags: 'env:production,trace_id:123,span_id:456',
       hostname: 'hostname'
     }).reply(204)
   })
@@ -49,11 +49,14 @@ describe('DatadogTransport#log(info, callback)', () => {
       apiKey: 'apikey',
       service: 'service',
       ddsource: 'ddsource',
-      ddtags: 'ddtags',
+      ddtags: 'env:production',
       hostname: 'hostname'
     })
     const callback = jest.fn()
-    await transport.log({ foo: 'bar' }, callback)
+    await transport.log({
+      foo: 'bar',
+      ddtags: 'trace_id:123,span_id:456'
+    }, callback)
     expect(scope.isDone()).toBe(true)
     expect(callback).toHaveBeenCalled()
   })
