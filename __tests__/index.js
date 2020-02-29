@@ -30,6 +30,10 @@ describe('DatadogTransport#log(info, callback)', () => {
     scope.post(
       '/v1/input/apikey',
       JSON.stringify({
+        dd: {
+          trace_id: 'abc',
+          span_id: 'def'
+        },
         foo: 'bar'
       })
     ).query({
