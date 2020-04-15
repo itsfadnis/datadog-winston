@@ -18,6 +18,7 @@ $ yarn add datadog-winston
 - **service**: The name of the application or service generating the logs
 - **ddsource**: The technology from which the logs originated
 - **ddtags**: Metadata assoicated with the logs
+- **intakeRegion**: The datadog intake to use. set to `eu` to force logs to be sent to the EU specific intake
 
 ## Usage
 ```javascript

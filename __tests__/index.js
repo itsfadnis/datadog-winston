@@ -1,4 +1,4 @@
-/* global describe, beforeEach, afterEach, jest, expect, it */
+/* global describe, jest, expect, it */
 
 const Transport = require('winston-transport')
 const DatadogTransport = require('../lib')
@@ -18,54 +18,62 @@ it('throws an error if api key isn\'t passed in', () => {
 })
 
 describe('DatadogTransport#log(info, callback)', () => {
-  let scope
-
-  beforeEach(() => {
-    scope = nock('https://http-intake.logs.datadoghq.com', {
-      reqheaders: {
-        'content-type': 'application/json'
+  [
+    {
+      case: 'transfers logs to the default intake',
+      uri: 'https://http-intake.logs.datadoghq.com'
+    },
+    {
+      case: 'transfers logs to the EU intake',
+      uri: 'https://http-intake.logs.datadoghq.eu',
+      opts: {
+        intakeRegion: 'eu'
       }
-    })
+    }
+  ]
+    .forEach(testCase => {
+      it(testCase.case, async () => {
+        const scope = nock(testCase.uri,
+          {
+            reqheaders: {
+              'content-type': 'application/json'
+            }
+          }).post(
+          '/v1/input/apikey',
+          JSON.stringify({
+            dd: {
+              trace_id: 'abc',
+              span_id: 'def'
+            },
+            foo: 'bar'
+          })
+        ).query({
+          service: 'service',
+          ddsource: 'ddsource',
+          ddtags: 'env:production,trace_id:abc,span_id:def,tag_a:value_a,tag_b:value_b',
+          hostname: 'hostname'
+        }).reply(204)
 
-    scope.post(
-      '/v1/input/apikey',
-      JSON.stringify({
-        dd: {
-          trace_id: 'abc',
-          span_id: 'def'
-        },
-        foo: 'bar'
+        const opts = Object.assign({}, {
+          apiKey: 'apikey',
+          service: 'service',
+          ddsource: 'ddsource',
+          ddtags: 'env:production',
+          hostname: 'hostname'
+        }, testCase.opts ? testCase.opts : {})
+
+        const transport = new DatadogTransport(opts)
+        const callback = jest.fn()
+        await transport.log({
+          dd: {
+            trace_id: 'abc',
+            span_id: 'def'
+          },
+          foo: 'bar',
+          ddtags: 'tag_a:value_a,tag_b:value_b'
+        }, callback)
+        expect(callback).toHaveBeenCalled()
+        expect(scope.isDone()).toBe(true)
       })
-    ).query({
-      service: 'service',
-      ddsource: 'ddsource',
-      ddtags: 'env:production,trace_id:abc,span_id:def,tag_a:value_a,tag_b:value_b',
-      hostname: 'hostname'
-    }).reply(204)
-  })
-
-  afterEach(() => {
-    nock.restore()
-  })
-
-  it('transports logs to datadog', async () => {
-    const transport = new DatadogTransport({
-      apiKey: 'apikey',
-      service: 'service',
-      ddsource: 'ddsource',
-      ddtags: 'env:production',
-      hostname: 'hostname'
     })
-    const callback = jest.fn()
-    await transport.log({
-      dd: {
-        trace_id: 'abc',
-        span_id: 'def'
-      },
-      foo: 'bar',
-      ddtags: 'tag_a:value_a,tag_b:value_b'
-    }, callback)
-    expect(scope.isDone()).toBe(true)
-    expect(callback).toHaveBeenCalled()
-  })
 })
