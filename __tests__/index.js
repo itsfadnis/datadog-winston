@@ -17,6 +17,13 @@ it('throws an error if api key isn\'t passed in', () => {
   }
 })
 
+it('has a name', () => {
+  const transport = new DatadogTransport({
+    apiKey: 'apiKey'
+  })
+  expect(transport.name).toEqual('datadog')
+})
+
 describe('DatadogTransport#log(info, callback)', () => {
   [
     {
