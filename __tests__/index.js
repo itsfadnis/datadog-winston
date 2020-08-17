@@ -83,4 +83,8 @@ describe('DatadogTransport#log(info, callback)', () => {
         expect(scope.isDone()).toBe(true)
       })
     })
+  it('Can retry', async () => {
+    const v = 5
+    expect(v === 4)
+  })
 })
