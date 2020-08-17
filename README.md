@@ -19,6 +19,7 @@ $ yarn add datadog-winston
 - **ddsource**: The technology from which the logs originated
 - **ddtags**: Metadata assoicated with the logs
 - **intakeRegion**: The datadog intake to use. set to `eu` to force logs to be sent to the EU specific intake
+- **retries**: The number of retry attempts to make sending logs to DataDog if there are communication errors. Defaults to 0, i.e. no retries
 
 ## Usage
 ```javascript
@@ -36,7 +37,8 @@ logger.add(
     hostname: 'my_machine',
     service: 'super_service',
     ddsource: 'nodejs',
-    ddtags: 'foo:bar,boo:baz'
+    ddtags: 'foo:bar,boo:baz',
+    retries: 5
   })
 )
 ```
