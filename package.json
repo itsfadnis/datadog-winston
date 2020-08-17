@@ -1,6 +1,6 @@
 {
   "name": "datadog-winston",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "description": "Ship winston logs to datadog without breaking a sweat",
   "main": "index.js",
   "repository": "https://github.com/itsfadnis/datadog-winston.git",
