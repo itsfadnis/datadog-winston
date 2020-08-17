@@ -83,4 +83,47 @@ describe('DatadogTransport#log(info, callback)', () => {
         expect(scope.isDone()).toBe(true)
       })
     })
+  it('Can retry', async () => {
+    const body = JSON.stringify({
+      dd: {
+        trace_id: 'abc',
+        span_id: 'def'
+      },
+      foo: 'bar'
+    })
+
+    const query = {
+      service: 'service',
+      ddsource: 'ddsource',
+      ddtags: 'env:production,trace_id:abc,span_id:def,tag_a:value_a,tag_b:value_b',
+      hostname: 'hostname'
+    }
+
+    const scope = nock('https://http-intake.logs.datadoghq.com')
+      .post('/v1/input/apikey', body).query(query).once().reply(501)
+      .post('/v1/input/apikey', body).query(query).once().reply(204)
+
+    const opts = Object.assign({}, {
+      apiKey: 'apikey',
+      service: 'service',
+      ddsource: 'ddsource',
+      ddtags: 'env:production',
+      hostname: 'hostname',
+      retries: 1
+    }, {})
+
+    const transport = new DatadogTransport(opts)
+    const callback = jest.fn()
+    await transport.log({
+      dd: {
+        trace_id: 'abc',
+        span_id: 'def'
+      },
+      foo: 'bar',
+      ddtags: 'tag_a:value_a,tag_b:value_b'
+    }, callback)
+
+    expect(scope.isDone()).toBe(true)
+    expect(callback).toHaveBeenCalled()
+  })
 })
