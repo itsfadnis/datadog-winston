@@ -13,7 +13,7 @@ $ yarn add datadog-winston
 ```
 
 ## Options
-- **apiKey**: Your datadog api key *[required]*
+- **apiKey**: Your datadog api key or client token *[required]*
 - **hostname**: The machine/server hostname
 - **service**: The name of the application or service generating the logs
 - **ddsource**: The technology from which the logs originated

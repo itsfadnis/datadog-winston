@@ -36,17 +36,32 @@ describe('DatadogTransport#log(info, callback)', () => {
       opts: {
         intakeRegion: 'eu'
       }
+    },
+    {
+      case: 'transfers logs to the browser intake',
+      uri: 'https://browser-http-intake.logs.datadoghq.com',
+      opts: {
+        apiKey: 'pubXXX'
+      }
     }
   ]
     .forEach(testCase => {
       it(testCase.case, async () => {
+        const opts = Object.assign({}, {
+          apiKey: 'apikey',
+          service: 'service',
+          ddsource: 'ddsource',
+          ddtags: 'env:production',
+          hostname: 'hostname'
+        }, testCase.opts ? testCase.opts : {})
+
         const scope = nock(testCase.uri,
           {
             reqheaders: {
               'content-type': 'application/json'
             }
           }).post(
-          '/v1/input/apikey',
+          `/v1/input/${opts.apiKey}`,
           JSON.stringify({
             dd: {
               trace_id: 'abc',
@@ -60,14 +75,6 @@ describe('DatadogTransport#log(info, callback)', () => {
           ddtags: 'env:production,trace_id:abc,span_id:def,tag_a:value_a,tag_b:value_b',
           hostname: 'hostname'
         }).reply(204)
-
-        const opts = Object.assign({}, {
-          apiKey: 'apikey',
-          service: 'service',
-          ddsource: 'ddsource',
-          ddtags: 'env:production',
-          hostname: 'hostname'
-        }, testCase.opts ? testCase.opts : {})
 
         const transport = new DatadogTransport(opts)
         const callback = jest.fn()
