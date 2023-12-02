@@ -36,6 +36,20 @@ describe('DatadogTransport#log(info, callback)', () => {
       opts: {
         intakeRegion: 'eu'
       }
+    },
+    {
+      case: 'transfers logs to the US3 intake',
+      uri: 'https://http-intake.logs.us3.datadoghq.com',
+      opts: {
+        intakeRegion: 'us3'
+      }
+    },
+    {
+      case: 'transfers logs to the US5 intake',
+      uri: 'https://http-intake.logs.us5.datadoghq.com',
+      opts: {
+        intakeRegion: 'us5'
+      }
     }
   ]
     .forEach(testCase => {
